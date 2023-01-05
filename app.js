@@ -1,5 +1,6 @@
 const express = require("express");
 const http = require("http");
+const gaxios = require("gaxios")
 
 const webApp = express();
 const server = http.createServer(webApp);
@@ -23,7 +24,7 @@ const options = parse(fs.readFileSync("./options.yaml", "utf-8"));
 global.server = server;
 global.webApp = webApp;
 global.options = options;
-global.VERSION = parseInt(fs.readFileSync("./VERSION"))
+global.VERSION = fs.readFileSync("./VERSION")
 global.io = io;
 
 global.proxy_stats = {
@@ -61,11 +62,18 @@ webApp.get("/internal/get_proxy_stats", (req, res) => {
 });
 
 webApp.get("/internal/get_version", (req, res) => {
-  res.json(global.VERSION);
+  res.send(global.VERSION);
 });
 
 webApp.get("/internal/get_latest_version", (req, res) => {
-  res.json(global.VERSION);
+  /*gaxios.request({
+    method: "GET",
+    url: "https://raw.githubusercontent.com/JijaProGamer/youtubeWatchBot/master/VERSION",
+  }).then((data) => {
+    res.send(data.data);
+  })*/
+
+  res.send("0")
 });
 
 function transformData(raw_data, resolve) {
