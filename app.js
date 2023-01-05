@@ -1,18 +1,39 @@
 const express = require("express");
 const http = require("http");
-const gaxios = require("gaxios")
+const gaxios = require("gaxios");
 
 const webApp = express();
 const server = http.createServer(webApp);
 const io = new (require("socket.io").Server)(server);
 
+webApp.use(express.json())
 webApp.use(require("cors")());
 
 const fs = require("fs-extra");
 
 const { spawn } = require("child_process");
-const { parse } = require("yaml");
+const { parse, stringify } = require("yaml");
 const { sleep } = require("youtube-selfbot-api")().internal;
+
+const killProcesses = (name) => {
+  return new Promise((resolve, reject) => {
+    let child;
+
+    if (process.platform == "win32") {
+      child = spawn("taskkill", ["/f", "/im", `${name}.exe`]);
+    } else {
+      child = spawn("killall", [name]);
+    }
+
+    child.stderr.on("data", (data) => {
+      data = data.toString();
+    });
+
+    child.on("exit", () => {
+      resolve();
+    });
+  });
+};
 
 let logs = [];
 let jobs = [];
@@ -23,8 +44,11 @@ const options = parse(fs.readFileSync("./options.yaml", "utf-8"));
 
 global.server = server;
 global.webApp = webApp;
+
 global.options = options;
-global.VERSION = fs.readFileSync("./VERSION")
+global.raw_options = options;
+
+global.VERSION = fs.readFileSync("./VERSION");
 global.io = io;
 
 global.proxy_stats = {
@@ -36,6 +60,17 @@ global.proxy_stats = {
 global.jobs = jobs;
 
 let queue_workers = [];
+
+webApp.post("/internal/set_raw_options", (req, res) => {
+  global.raw_options = req.body
+  fs.writeFileSync("./options.yaml", stringify(global.raw_options), "utf-8")
+
+  res.sendStatus(200)
+});
+
+webApp.get("/internal/get_raw_options", (req, res) => {
+  res.json(global.raw_options);
+});
 
 webApp.get("/internal/get_options", (req, res) => {
   res.json(options);
@@ -73,7 +108,7 @@ webApp.get("/internal/get_latest_version", (req, res) => {
     res.send(data.data);
   })*/
 
-  res.send("0")
+  res.send("0");
 });
 
 function transformData(raw_data, resolve) {
@@ -206,7 +241,7 @@ require("./internal/application/launchGUI.js").then(async () => {
   let lastLaunched = Date.now() / 1000 - options.concurrencyInterval;
 
   for (let i = 5; i > 0; i--) {
-    await sleep(1000)
+    await sleep(1000);
   }
 
   await correctOptions();
@@ -231,6 +266,8 @@ require("./internal/application/launchGUI.js").then(async () => {
   queue_workers = jobs;
 
   let interval = setInterval(() => {
+    killProcesses("software_reporter_tool");
+
     if (Date.now() / 1000 - options.concurrencyInterval > lastLaunched) {
       if (currentWorking < options.concurrency) {
         let currentJob = totalWorked;
@@ -265,7 +302,7 @@ require("./internal/application/launchGUI.js").then(async () => {
 
         log(`worker #${currentJob + 1} started`, "info");
 
-        handleWorker(worker, job, totalWorked)
+        handleWorker(worker)
           .then(() => {
             workers_finished.push(worker);
             current_workers = current_workers.filter(

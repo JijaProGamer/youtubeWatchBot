@@ -21,6 +21,7 @@
   export let latestVersion = 0;
 
   export let options = {};
+  export let raw_options = {};
   let socket;
 
   export let UI_TYPE = "proxies";
@@ -47,6 +48,8 @@
 
   (async () => {
     options = await doRequest("get_options");
+    raw_options = await doRequest("get_raw_options")
+
     queue_workers = await doRequest("get_queue_workers");
     current_workers = await doRequest("get_current_workers");
     finished_workers = await doRequest("get_finished_workers");
@@ -72,13 +75,17 @@
           queue_workers = queue_workers.filter(
             (v) => v.uuid !== data.data.job.uuid
           );
+
           current_workers.push(data.data);
+          current_workers = current_workers
           break;
         case "remove_worker":
           current_workers = current_workers.filter(
             (v) => v.job.uuid !== data.data.job.uuid
           );
+
           finished_workers.push(data.data);
+          finished_workers = finished_workers
           break;
         case "add_testing_proxy":
           proxies.untested.push(data);
@@ -131,7 +138,7 @@
       <CONSOLE_UI {logs} />
     </div>
   {:else if UI_TYPE == "file_editor"}
-    <FILE_EDITOR_UI {current_workers} {queue_workers} {finished_workers} />
+    <FILE_EDITOR_UI {raw_options} />
   {/if}
 
   <div id="buttons_container">

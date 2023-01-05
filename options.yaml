@@ -6,10 +6,10 @@ server_port: 8955
 
 debug: false
 headless: false
-no_visuals: false
+no_visuals: true
 browserPath: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
 
-concurrency: 20
+concurrency: 3
 concurrencyInterval: 20
 
 proxyTimeout: 30
@@ -24,7 +24,7 @@ proxies:
 videos:
       - id: VmqjnP98wfM
         watchTime: 100%
-        guest_views: 40
+        guest_views: 5
         style:
               - search
               - subscriptions
