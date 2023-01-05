@@ -48,7 +48,7 @@
 
   (async () => {
     options = await doRequest("get_options");
-    raw_options = await doRequest("get_raw_options")
+    raw_options = await doRequest("get_raw_options");
 
     queue_workers = await doRequest("get_queue_workers");
     current_workers = await doRequest("get_current_workers");
@@ -63,7 +63,7 @@
       upgrade: false,
     });
 
-    socket.on("message", (data) => {      
+    socket.on("message", (data) => {
       switch (data.type) {
         case "new_options":
           options = data.data;
@@ -77,7 +77,7 @@
           );
 
           current_workers.push(data.data);
-          current_workers = current_workers
+          current_workers = current_workers;
           break;
         case "remove_worker":
           current_workers = current_workers.filter(
@@ -85,11 +85,11 @@
           );
 
           finished_workers.push(data.data);
-          finished_workers = finished_workers
+          finished_workers = finished_workers;
           break;
         case "add_testing_proxy":
           proxies.untested.push(data);
-          proxies = proxies
+          proxies = proxies;
           break;
         case "add_good_proxy":
           proxies.untested = proxies.untested.filter(
@@ -97,7 +97,7 @@
           );
 
           proxies.good.push(data);
-          proxies = proxies
+          proxies = proxies;
           break;
         case "add_bad_proxy":
           proxies.untested = proxies.untested.filter(
@@ -105,7 +105,7 @@
           );
 
           proxies.bad.push(data);
-          proxies = proxies
+          proxies = proxies;
           break;
         case "update_worker":
           let index = current_workers.findIndex(
@@ -116,8 +116,8 @@
           break;
         case "add_log":
           logs.push(data.data);
-          logs = logs
-          
+          logs = logs;
+
           break;
       }
     });
@@ -131,14 +131,20 @@
     </div>
   {:else if UI_TYPE == "proxies"}
     <div id="main_container">
-      <PROXIES_UI good={proxies.good} bad={proxies.bad} untested={proxies.untested} />
+      <PROXIES_UI
+        good={proxies.good}
+        bad={proxies.bad}
+        untested={proxies.untested}
+      />
     </div>
   {:else if UI_TYPE == "console"}
     <div id="main_container">
       <CONSOLE_UI {logs} />
     </div>
   {:else if UI_TYPE == "file_editor"}
-    <FILE_EDITOR_UI {raw_options} />
+    <div id="main_container">
+      <FILE_EDITOR_UI {raw_options} />
+    </div>
   {/if}
 
   <div id="buttons_container">
@@ -168,6 +174,10 @@
       id="file_button">FILE EDITOR</button
     >
 
-    <h2 class="version_{latestVersion == currentVersion && "latest" || "old"}">VERSION {currentVersion}/{latestVersion}</h2>
+    <h2
+      class="version_{(latestVersion == currentVersion && 'latest') || 'old'}"
+    >
+      VERSION {currentVersion}/{latestVersion}
+    </h2>
   </div>
 </main>

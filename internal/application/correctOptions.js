@@ -21,6 +21,11 @@ module.exports = () => {
 
     if (options.proxies) {
       for (let [index, proxy] of options.proxies.entries()) {
+        let breaks = proxy.split(":")
+        if(breaks.length == 4){
+          options.proxies[index] = `${breaks[3]}:${breaks[2]}@${breaks[0]}:${breaks[1]}`
+        }
+
         io.sockets.write({
           type: "add_testing_proxy",
           data: proxy,
