@@ -18,6 +18,9 @@
   let concurrencyInterval = raw_options.concurrencyInterval
   let proxyTimeout = raw_options.proxyTimeout
 
+  let raw_proxies = raw_options.proxies.join("\n")
+  let raw_accounts = raw_options.videos.map(v => v).join("\n")
+
   function change_internal_port() {
     raw_options.server_port = parseInt(internal_port) || 8525
     sendInputChange(raw_options)
@@ -81,6 +84,7 @@
 
 <div id="elements_container">
   <p class="selector_explanation" style="text-align: center;">NOTE: You need to restart this app for the settings to apply</p>
+  <p class="selector_explanation" style="text-align: center;">You should read the wiki before changing any setting</p>
 
   <div id="simple_selectors_1">
     <h3 class="selector_text">Close server on finish: 
@@ -132,5 +136,16 @@
       <button on:click={change_proxy_tested_headless} class="selector_button proxy_{raw_options.proxy_tested_headless == true ? "good" : "bad"}">{raw_options.proxy_tested_headless}
     </button></h3>
     <p class="selector_explanation">Should the proxy test browsers be headless?</p>
+  </div>
+
+  <div id="advanced_selectors_2">
+    <div id="proxy_list">
+      <p class="selector_explanation" style="text-align: center;">Proxy list</p>
+      <textarea bind:value={raw_proxies} class="many_button"></textarea>
+    </div>
+    <div id="account_list">
+      <p class="selector_explanation" style="text-align: center;">Account list</p>
+      <textarea bind:value={raw_accounts} class="many_button"></textarea>
+    </div>
   </div>
 </div>

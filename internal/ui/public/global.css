@@ -113,6 +113,15 @@ main {
   margin-bottom: 5%;
 }
 
+.many_button {
+  font-size: 1em;
+  height: 30vh;
+  resize: none;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 .selector_button {
   font-size: 1em;
   height: 100%;
@@ -122,6 +131,33 @@ main {
 
 #simple_selectors_1 {
   border: 2px solid #f5f5f5;
+}
+
+#advanced_selectors_2 {
+  width: 100%;
+  max-width: 100%;
+  min-width: 100%;
+  border: 2px solid #f5f5f5;
+  margin: 0;
+  padding: 0;
+}
+
+#proxy_list {
+  border: 2px solid #f5f5f5;
+  max-width: 50%;
+  width: 49%;
+  margin: 0;
+  padding: 0;
+  float: left;
+}
+
+#account_list {
+  border: 2px solid #f5f5f5;
+  max-width: 50%;
+  width: 49%;
+  margin: 0;
+  padding: 0;
+  float: right;
 }
 
 .element_container {
