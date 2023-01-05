@@ -1,0 +1,2 @@
+electron ./app.js
+pause

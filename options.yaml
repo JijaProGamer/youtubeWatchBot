@@ -1,0 +1,29 @@
+# If this is your first time seeing this file
+# please read this wiki: https://github.com/JijaProGamer/youtubeWatchBot/wiki/editing-the-options.yaml-file
+
+close_server_on_finish: true
+server_port: 8955
+
+debug: false
+headless: false
+browserPath: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+
+concurrency: 15
+concurrencyInterval: 10
+
+proxyTimeout: 30
+disable_proxy_tests: false
+proxy_tested_headless: true
+
+shuffle_viewing_order: true
+
+proxies:
+      - direct://
+
+videos:
+      - id: uAF0UXmMbNA
+        watchTime: 75%-85%
+        guest_views: 65
+        style:
+              - search
+              - subscriptions
