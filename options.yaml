@@ -10,7 +10,16 @@ disable_proxy_tests: false
 proxy_tested_headless: true
 shuffle_viewing_order: true
 proxies:
-  - direct://
+  - 185.199.229.156:7492:bloxxy213:Victor0nokia5
+  - 185.199.228.220:7300:bloxxy213:Victor0nokia5
+  - 185.199.231.45:8382:bloxxy213:Victor0nokia5
+  - 188.74.210.207:6286:bloxxy213:Victor0nokia5
+  - 188.74.183.10:8279:bloxxy213:Victor0nokia5
+  - 188.74.210.21:6100:bloxxy213:Victor0nokia5
+  - 45.155.68.129:8133:bloxxy213:Victor0nokia5
+  - 154.95.36.199:6893:bloxxy213:Victor0nokia5
+  - 45.94.47.66:8110:bloxxy213:Victor0nokia5
+  - 144.168.217.88:8780:bloxxy213:Victor0nokia5
 videos:
   - id: VmqjnP98wfM
     watchTime: 100%

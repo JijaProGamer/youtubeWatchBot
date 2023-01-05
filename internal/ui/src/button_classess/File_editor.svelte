@@ -18,8 +18,20 @@
   let concurrencyInterval = raw_options.concurrencyInterval
   let proxyTimeout = raw_options.proxyTimeout
 
+  let proxies
   let raw_proxies = raw_options.proxies.join("\n")
-  let raw_accounts = raw_options.videos.map(v => v).join("\n")
+
+  function publish_raw_proxies(){
+    proxies = raw_proxies.split("\n")
+    raw_options.proxies = proxies
+
+    axios
+        .post(`/internal/set_raw_options`, raw_options)
+        .then(() => {})
+        .catch(() => {});
+  }
+
+  $: publish_raw_proxies(raw_proxies)
 
   function change_internal_port() {
     raw_options.server_port = parseInt(internal_port) || 8525
@@ -139,13 +151,7 @@
   </div>
 
   <div id="advanced_selectors_2">
-    <div id="proxy_list">
-      <p class="selector_explanation" style="text-align: center;">Proxy list</p>
-      <textarea bind:value={raw_proxies} class="many_button"></textarea>
-    </div>
-    <div id="account_list">
-      <p class="selector_explanation" style="text-align: center;">Account list</p>
-      <textarea bind:value={raw_accounts} class="many_button"></textarea>
-    </div>
+    <p class="selector_explanation" style="text-align: center;">Proxy list</p>
+    <textarea bind:value={raw_proxies} class="many_button"></textarea>
   </div>
 </div>

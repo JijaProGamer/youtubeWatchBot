@@ -20,16 +20,21 @@ module.exports = () => {
     let newProxies = [];
 
     if (options.proxies) {
+      options.proxies = options.proxies.filter((v) => v.length > 5)
+      options.proxies = [...new Set(options.proxies)];
+      
       for (let [index, proxy] of options.proxies.entries()) {
-        let breaks = proxy.split(":")
-        if(breaks.length == 4){
-          options.proxies[index] = `${breaks[3]}:${breaks[2]}@${breaks[0]}:${breaks[1]}`
+        if(proxy.length > 5){
+          let breaks = proxy.split(":")
+          if(breaks.length == 4){
+            options.proxies[index] = `${breaks[2]}:${breaks[3]}@${breaks[0]}:${breaks[1]}`
+          }
+  
+          io.sockets.write({
+            type: "add_testing_proxy",
+            data: proxy,
+          });
         }
-
-        io.sockets.write({
-          type: "add_testing_proxy",
-          data: proxy,
-        });
       }
 
       for (let [index, proxy] of options.proxies.entries()) {
@@ -40,6 +45,7 @@ module.exports = () => {
             data: proxy,
           };
 
+          global.proxy_stats.untested = global.proxy_stats.untested.filter(v => v.data !== proxy)
           global.proxy_stats.good.push(data2);
           io.sockets.write(data2);
         } else {
@@ -59,6 +65,7 @@ module.exports = () => {
               data: proxy,
             };
 
+            global.proxy_stats.untested = global.proxy_stats.untested.filter(v => v.data !== proxy)
             global.proxy_stats.good.push(data2);
             io.sockets.write(data2);
           } else {
@@ -73,6 +80,7 @@ module.exports = () => {
               data: proxy,
             };
 
+            global.proxy_stats.untested = global.proxy_stats.untested.filter(v => v.data !== proxy)
             global.proxy_stats.bad.push(data);
             io.sockets.write(data);
           }

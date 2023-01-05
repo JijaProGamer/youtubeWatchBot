@@ -171,7 +171,7 @@
       class="class_button{(UI_TYPE == 'file_editor' &&
         ' selected_class_button') ||
         ''}"
-      id="file_button">FILE EDITOR</button
+      id="file_button">PROGRAM SETTINGS</button
     >
 
     <h2
