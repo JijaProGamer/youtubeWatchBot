@@ -56,6 +56,7 @@ function ask(type, message) {
     userDataDir: path.join(__dirname, `cache/${index}`),
     saveBandwith: true,
     headless: options.headless,
+    no_visuals: options.no_visuals,
   });
 
   let data = connection.data;

@@ -23,6 +23,7 @@ const options = parse(fs.readFileSync("./options.yaml", "utf-8"));
 global.server = server;
 global.webApp = webApp;
 global.options = options;
+global.VERSION = parseInt(fs.readFileSync("./VERSION"))
 global.io = io;
 
 global.proxy_stats = {
@@ -59,6 +60,13 @@ webApp.get("/internal/get_proxy_stats", (req, res) => {
   res.json(proxy_stats);
 });
 
+webApp.get("/internal/get_version", (req, res) => {
+  res.json(global.VERSION);
+});
+
+webApp.get("/internal/get_latest_version", (req, res) => {
+  res.json(global.VERSION);
+});
 
 function transformData(raw_data, resolve) {
   raw_data = raw_data.toString();

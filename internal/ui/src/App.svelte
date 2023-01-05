@@ -17,6 +17,9 @@
   export let logs = [];
   export let proxies = {};
 
+  export let currentVersion = 0;
+  export let latestVersion = 0;
+
   export let options = {};
   let socket;
 
@@ -49,6 +52,8 @@
     finished_workers = await doRequest("get_finished_workers");
     logs = await doRequest("get_logs");
     proxies = await doRequest("get_proxy_stats");
+    currentVersion = await doRequest("get_version");
+    latestVersion = await doRequest("get_latest_version");
 
     socket = io(`ws://localhost:${options.server_port}`, {
       transports: ["websocket"],
@@ -156,6 +161,6 @@
       id="file_button">FILE EDITOR</button
     >
 
-    <h2>VERSION {585}/{1036}</h2>
+    <h2 class="version_{latestVersion == currentVersion && "latest" || "old"}">VERSION {currentVersion}/{latestVersion}</h2>
   </div>
 </main>
