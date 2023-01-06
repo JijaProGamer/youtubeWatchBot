@@ -338,3 +338,11 @@ h2 {
   align-items: center;
   justify-content: center;
 }
+
+.new_button {
+  width: 90%;
+  margin-left: 5%;
+  font-size: 2em;
+  background-color: #a5db8f;
+  color:#f5f5f5;
+}

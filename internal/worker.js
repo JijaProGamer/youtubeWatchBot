@@ -116,7 +116,7 @@ function ask(type, message) {
             disliked = true
         }
 
-        if(worker.job.account.comment && !commented && current_time >= worker.job.account.commentAfter){
+        if(worker.job.account.comment && worker.job.account.comment.length > 0 && !commented && current_time >= worker.job.account.commentAfter){
             await API.makeComment(page, worker.job.account.comment)
             commented = true
         }

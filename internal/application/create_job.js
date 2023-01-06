@@ -53,6 +53,9 @@ module.exports = async function(video, account){
                     } else {
                         account.likeAfter = (video_stats.duration / 100) * parseInt(parts[0])
                     }
+                } else if(typeof account.likeAfter == "object"){
+                    let rand = random(parseInt(account.likeAfter[0]), parseInt(account.likeAfter[1]))
+                    account.likeAfter = (video_stats.duration / 100) * rand
                 }
             } else {
                 account.likeAfter = 0
@@ -74,13 +77,16 @@ module.exports = async function(video, account){
                     } else {
                         account.dislikeAfter = (video_stats.duration / 100) * parseInt(parts[0])
                     }
+                } else if(typeof account.dislikeAfter == "object"){
+                    let rand = random(parseInt(account.dislikeAfter[0]), parseInt(account.dislikeAfter[1]))
+                    account.dislikeAfter = (video_stats.duration / 100) * rand
                 }
             } else {
                 account.dislikeAfter = 0
             }
         }
 
-        if(account.comment){
+        if(account.comment && account.comment.length > 0){
             if(account.commentAfter){
                 if(typeof account.commentAfter == "string"){
                     let parts = account.commentAfter.split("-")
@@ -95,6 +101,9 @@ module.exports = async function(video, account){
                     } else {
                         account.commentAfter = (video_stats.duration / 100) * parseInt(parts[0])
                     }
+                } else if(typeof account.commentAfter == "object"){
+                    let rand = random(parseInt(account.commentAfter[0]), parseInt(account.commentAfter[1]))
+                    account.commentAfter = (video_stats.duration / 100) * rand
                 }
             } else {
                 account.commentAfter = 0

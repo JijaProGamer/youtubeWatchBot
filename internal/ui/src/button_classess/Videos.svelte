@@ -81,13 +81,129 @@
           <Slider max="100" step="1" bind:value={video.watchTime} range order />
         </h3>
 
-        <div class="simple_selectors_1">
+        <div class="advanced_selectors_2">
+          <p class="selector_explanation" style="text-align: center;">
+            Accounts
+          </p>
+
+          <button
+            class="new_button"
+            on:click={() => {
+              video.accounts.unshift({
+                email: "your@email.com",
+                password: "your password",
+                cookies: "optional",
+                comment: "",
+                dislike: false,
+                like: false,
+                likeAfter: [0, 0],
+                watchTime: [0, 0],
+                dislikeAfter: [0, 0],
+                commentAfter: [0, 0]
+              });
+
+              video.accounts = video.accounts
+            }}>ADD ACCOUNT</button
+          >
+
           {#each video.accounts as account, index}
             <div class="element_container_small">
               <h3 class="video_selector_text">
-                Email:
-                <input bind:value={account.email} class="video_selector_button" />
+                Email (Or cookies):
+                <input
+                  bind:value={account.email}
+                  class="video_selector_button"
+                />
               </h3>
+
+              <h3 class="video_selector_text">
+                Password (Or cookies):
+                <input
+                  bind:value={account.password}
+                  class="video_selector_button"
+                />
+              </h3>
+
+              <h3 class="video_selector_text">
+                Cookies (Or email/password):
+                <input
+                  bind:value={account.cookies}
+                  class="video_selector_button"
+                />
+              </h3>
+
+              <h3 class="video_selector_text">
+                Comment (leave blank if no comment):
+                <input
+                  bind:value={account.comment}
+                  class="video_selector_button"
+                />
+              </h3>
+
+              <h3 class="selector_text">
+                Like:
+                <button
+                  on:click={() => (account.like = !account.like)}
+                  class="selector_button proxy_{account.like ? 'good' : 'bad'}"
+                  >{account.like}
+                </button>
+              </h3>
+
+              <h3 class="selector_text">
+                Dislike:
+                <button
+                  on:click={() => (account.dislike = !account.dislike)}
+                  class="selector_button proxy_{account.dislike
+                    ? 'good'
+                    : 'bad'}"
+                  >{account.dislike}
+                </button>
+              </h3>
+
+              {#if account.like}
+                <h3 class="video_selector_text">
+                  Like at moment: {account.likeAfter[0]}%-{account
+                    .likeAfter[1]}%
+                  <Slider
+                    max={video.watchTime[1]}
+                    min={video.watchTime[0]}
+                    step="1"
+                    bind:value={account.likeAfter}
+                    range
+                    order
+                  />
+                </h3>
+              {/if}
+
+              {#if account.dislike}
+                <h3 class="video_selector_text">
+                  Dislike at moment: {account.dislikeAfter[0]}%-{account
+                    .dislikeAfter[1]}%
+                  <Slider
+                    max={video.watchTime[1]}
+                    min={video.watchTime[0]}
+                    step="1"
+                    bind:value={account.dislikeAfter}
+                    range
+                    order
+                  />
+                </h3>
+              {/if}
+
+              {#if account.comment.length > 0}
+                <h3 class="video_selector_text">
+                  Comment at moment: {account.commentAfter[0]}%-{account
+                    .commentAfter[1]}%
+                  <Slider
+                    max={video.watchTime[1]}
+                    min={video.watchTime[0]}
+                    step="1"
+                    bind:value={account.commentAfter}
+                    range
+                    order
+                  />
+                </h3>
+              {/if}
             </div>
           {/each}
         </div>
