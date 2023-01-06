@@ -16,11 +16,6 @@
   function changeContainer_bad() {
     container_type = "bad";
   }
-
-  function convert_date(date) {
-    let obj = new Date(date);
-    return `${obj.getHours()}:${obj.getMinutes()}:${obj.getSeconds()}`;
-  }
 </script>
 
 <div id="proxy_container">

@@ -16,25 +16,17 @@ module.exports = () => {
     }
 
     let newVideos = [];
-
     let newProxies = [];
 
-    if (options.proxies) {
-      options.proxies = options.proxies.filter((v) => v.length > 5)
-      options.proxies = [...new Set(options.proxies)];
-      
+    if (options.proxies && options.proxies.length > 0) {
       for (let [index, proxy] of options.proxies.entries()) {
-        if(proxy.length > 5){
-          let breaks = proxy.split(":")
-          if(breaks.length == 4){
-            options.proxies[index] = `${breaks[2]}:${breaks[3]}@${breaks[0]}:${breaks[1]}`
-          }
+        let data = {
+          type: "add_testing_proxy",
+          data: proxy,
+        };
   
-          io.sockets.write({
-            type: "add_testing_proxy",
-            data: proxy,
-          });
-        }
+        global.proxy_stats.untested.push(data);
+        io.sockets.write(data);
       }
 
       for (let [index, proxy] of options.proxies.entries()) {
@@ -91,7 +83,6 @@ module.exports = () => {
     } else {
       let data = {
         type: "add_testing_proxy",
-        error: err,
         data: proxy,
       };
 

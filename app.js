@@ -40,7 +40,19 @@ let jobs = [];
 let current_workers = [];
 let workers_finished = [];
 
-const options = parse(fs.readFileSync("./options.yaml", "utf-8"));
+const options = parse(fs.readFileSync("./UDATA/options.yaml", "utf-8"));
+
+options.proxies = options.proxies.filter((v) => v.length > 5)
+options.proxies = [...new Set(options.proxies)];
+
+for (let [index, proxy] of options.proxies.entries()) {
+  if(proxy.length > 5){
+    let breaks = proxy.split(":")
+    if(breaks.length == 4){
+      options.proxies[index] = `${breaks[2]}:${breaks[3]}@${breaks[0]}:${breaks[1]}`
+    }
+  }
+}
 
 global.server = server;
 global.webApp = webApp;
@@ -63,7 +75,7 @@ let queue_workers = [];
 
 webApp.post("/internal/set_raw_options", (req, res) => {
   global.raw_options = req.body
-  fs.writeFileSync("./options.yaml", stringify(global.raw_options), "utf-8")
+  fs.writeFileSync("./UDATA/options.yaml", stringify(global.raw_options), "utf-8")
 
   res.sendStatus(200)
 });

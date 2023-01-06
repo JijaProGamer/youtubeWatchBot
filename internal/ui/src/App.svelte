@@ -29,6 +29,7 @@
   import PROXIES_UI from "./button_classess/Proxies.svelte";
   import CONSOLE_UI from "./button_classess/Console.svelte";
   import FILE_EDITOR_UI from "./button_classess/File_editor.svelte";
+  import VIDEOS_UI from "./button_classess/Videos.svelte";
 
   function changeContainer_workers() {
     UI_TYPE = "workers";
@@ -44,6 +45,10 @@
 
   function changeContainer_file_editor() {
     UI_TYPE = "file_editor";
+  }
+
+  function changeContainer_videos() {
+    UI_TYPE = "videos";
   }
 
   (async () => {
@@ -145,6 +150,10 @@
     <div id="main_container">
       <FILE_EDITOR_UI {raw_options} />
     </div>
+  {:else if UI_TYPE == "videos"}
+    <div id="main_container">
+      <VIDEOS_UI {raw_options} />
+    </div>
   {/if}
 
   <div id="buttons_container">
@@ -172,6 +181,13 @@
         ' selected_class_button') ||
         ''}"
       id="file_button">PROGRAM SETTINGS</button
+    >
+
+    <button
+      on:click={changeContainer_videos}
+      class="class_button{(UI_TYPE == 'videos' && ' selected_class_button') ||
+        ''}"
+      id="videos_button">VIDEOS</button
     >
 
     <h2
