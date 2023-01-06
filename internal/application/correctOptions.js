@@ -79,7 +79,7 @@ module.exports = () => {
         }
       }
 
-      options.newProxies = newProxies;
+      options.proxies = newProxies;
     } else {
       let data = {
         type: "add_testing_proxy",
@@ -102,6 +102,15 @@ module.exports = () => {
     }
 
     for (let video of options.videos) {
+      if(video.id.includes("/")){
+        let url = new URL(video.id)
+        if(url.pathname.includes("shorts")){
+          video.id = url.pathname.split("/")[2]
+        } else if (url.pathname.includes("watch")){
+          video.id = url.searchParams.get("v")
+        }
+      }
+
       let [err, sucess] = await to(idValid(video.id));
 
       if (sucess) {

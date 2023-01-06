@@ -1,5 +1,5 @@
 close_server_on_finish: true
-server_port: 8955
+server_port: 6553
 headless: false
 no_visuals: false
 browserPath: C:\Program Files\Google\Chrome\Application\chrome.exe
@@ -13,8 +13,26 @@ proxies:
 
 videos:
   - id: VmqjnP98wfM
-    watchTime: 100%
+    watchTime:
+      - 36
+      - 85
     guest_views: 5
+    is_live: false
     style:
       - search
+      - direct
       - subscriptions
+    accounts:
+      - email: test@email.com
+        password: CoolPassword_123
+        cookies: "[{name: 'secure_stuff', value: 'something'},{name: 'another_cookie',
+          value: 'yes'}]"
+        like: true
+        dislike: false
+        comment: This is a cool video
+        likeAfter: 50%-75%
+        dislikeAfter: 0%-50%
+        commentAfter: 0%-50%
+      - email: test_222@email.com
+        password: EvenBetterPassword_123
+        dislike: true

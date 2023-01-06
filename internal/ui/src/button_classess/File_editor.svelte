@@ -34,7 +34,9 @@
   $: publish_raw_proxies(raw_proxies)
 
   function change_internal_port() {
-    raw_options.server_port = parseInt(internal_port) || 8525
+    internal_port = Math.min(Math.max(internal_port, 80), 65535)
+
+    raw_options.server_port = internal_port || 8525
     sendInputChange(raw_options)
   }
 
@@ -44,17 +46,17 @@
   }
 
   function change_concurrency() {
-    raw_options.concurrency = parseInt(concurrency) || 0
+    raw_options.concurrency = concurrency
     sendInputChange(raw_options)
   }
 
   function change_concurrencyInterval(){
-    raw_options.concurrencyInterval = parseInt(concurrencyInterval) || 0
+    raw_options.concurrencyInterval = concurrencyInterval
     sendInputChange(raw_options)
   }
 
   function change_proxyTimeout(){
-    raw_options.proxyTimeout = parseInt(proxyTimeout) || 0
+    raw_options.proxyTimeout = proxyTimeout
     sendInputChange(raw_options)
   }
 
@@ -105,7 +107,7 @@
     <p class="selector_explanation">When the program finishes, should it close itself?</p>
 
     <h3 class="selector_text">Server port: 
-      <input bind:value={internal_port} class="selector_button">
+      <input type=number min=80 max=65535 bind:value={internal_port} class="selector_button">
     </h3>
     <p class="selector_explanation">The port the internal server listens to</p>
 
@@ -125,17 +127,17 @@
     <p class="selector_explanation">Should the browsers not render the page? (Significantly reduces CPU usage)</p>
 
     <h3 class="selector_text">Concurrency: 
-      <input bind:value={concurrency} class="selector_button">
+      <input type=number bind:value={concurrency} class="selector_button">
     </h3>
     <p class="selector_explanation">How many browsers can exist at the same time</p>
 
     <h3 class="selector_text">Concurrency Interval: 
-      <input bind:value={concurrencyInterval} class="selector_button">
+      <input type=number bind:value={concurrencyInterval} class="selector_button">
     </h3>
     <p class="selector_explanation">How much to wait before launching the next browser?</p>
 
     <h3 class="selector_text">Proxy Timeout: 
-      <input bind:value={proxyTimeout} class="selector_button">
+      <input type=number bind:value={proxyTimeout} class="selector_button">
     </h3>
     <p class="selector_explanation">How much to wait for an proxy before erroring?</p>
 

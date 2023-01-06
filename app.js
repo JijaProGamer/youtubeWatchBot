@@ -54,11 +54,13 @@ for (let [index, proxy] of options.proxies.entries()) {
   }
 }
 
+global.NXT_DATA = fs.readFileSync("./UDATA/NXT_DATA", "utf-8")
 global.server = server;
 global.webApp = webApp;
 
 global.options = options;
 global.raw_options = options;
+global.raw_videos = options.videos;
 
 global.VERSION = fs.readFileSync("./VERSION");
 global.io = io;
@@ -75,9 +77,21 @@ let queue_workers = [];
 
 webApp.post("/internal/set_raw_options", (req, res) => {
   global.raw_options = req.body
-  fs.writeFileSync("./UDATA/options.yaml", stringify(global.raw_options), "utf-8")
+  fs.writeFileSync("./UDATA/options.yaml", stringify({...global.raw_options, videos: global.raw_videos}), "utf-8")
 
   res.sendStatus(200)
+});
+
+
+webApp.post("/internal/set_videos", (req, res) => {
+  global.raw_videos = req.body
+  fs.writeFileSync("./UDATA/options.yaml", stringify({...global.raw_options, videos: global.raw_videos}), "utf-8")
+
+  res.sendStatus(200)
+});
+
+webApp.get("/internal/NXT_DATA", (req, res) => {
+  res.send(global.NXT_DATA);
 });
 
 webApp.get("/internal/get_raw_options", (req, res) => {

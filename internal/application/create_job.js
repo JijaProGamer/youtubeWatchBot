@@ -30,6 +30,9 @@ module.exports = async function(video, account){
         } else {
             watchTime = (video_stats.duration / 100) * parseInt(parts[0])
         }
+    } else if(typeof watchTime == "object"){
+        let rand = random(parseInt(watchTime[0]), parseInt(watchTime[1]))
+        watchTime = (video_stats.duration / 100) * rand
     }
 
     job.watchTime = watchTime
