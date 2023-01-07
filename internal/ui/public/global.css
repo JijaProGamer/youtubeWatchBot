@@ -21,10 +21,12 @@ main {
 }
 
 .version_latest {
+  margin-top: 15%;
   color: #a5db8f;
 }
 
 .version_old {
+  margin-top: 15%;
   color: #db3838;
 }
 

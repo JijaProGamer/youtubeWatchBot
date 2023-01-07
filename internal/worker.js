@@ -53,7 +53,7 @@ function ask(type, message) {
 (async () => {
   let connection = await API.connectBrowser(options.browserPath, {
     proxyServer: worker.job.proxy,
-    userDataDir: path.join(__dirname, `cache/${index}`),
+    userDataDir: path.join(__dirname, `../UDATA/cache/${index}`),
     saveBandwith: true,
     headless: options.headless,
     no_visuals: options.no_visuals,

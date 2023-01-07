@@ -235,7 +235,7 @@
   </style>
   
   <div class="multiselect" class:readonly>
-    <div class="tokens" class:showOptions on:click={handleTokenClick}>
+    <div class="tokens" class:showOptions on:keydown={() => {}} on:click={handleTokenClick}>
       {#each Object.values(selected) as s}
         <div class="token" data-id="{s.value}">
           <span>{s.name}</span>

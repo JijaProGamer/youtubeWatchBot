@@ -20,6 +20,7 @@
   export let currentVersion = 0;
   export let latestVersion = 0;
 
+  export let NXT_DATA = "STOP";
   export let options = {};
   export let raw_options = {};
   let socket;
@@ -31,29 +32,15 @@
   import FILE_EDITOR_UI from "./button_classess/File_editor.svelte";
   import VIDEOS_UI from "./button_classess/Videos.svelte";
 
-  function changeContainer_workers() {
-    UI_TYPE = "workers";
-  }
-
-  function changeContainer_proxies() {
-    UI_TYPE = "proxies";
-  }
-
-  function changeContainer_console() {
-    UI_TYPE = "console";
-  }
-
-  function changeContainer_file_editor() {
-    UI_TYPE = "file_editor";
-  }
-
-  function changeContainer_videos() {
-    UI_TYPE = "videos";
+  function changeNXT_DATA() {
+    NXT_DATA = NXT_DATA == "STOP" ? "START" : "STOP"
+    axios.post(`/internal/set_NXT_DATA`, {data: NXT_DATA})
   }
 
   (async () => {
     options = await doRequest("get_options");
     raw_options = await doRequest("get_raw_options");
+    NXT_DATA = await doRequest("NXT_DATA");
 
     queue_workers = await doRequest("get_queue_workers");
     current_workers = await doRequest("get_current_workers");
@@ -130,70 +117,57 @@
 </script>
 
 <main>
-  {#if UI_TYPE == "workers"}
-    <div id="main_container">
+  <div id="main_container">
+    {#if UI_TYPE == "workers"}
       <WORKERS_UI {current_workers} {queue_workers} {finished_workers} />
-    </div>
-  {:else if UI_TYPE == "proxies"}
-    <div id="main_container">
+    {:else if UI_TYPE == "proxies"}
       <PROXIES_UI
         good={proxies.good}
         bad={proxies.bad}
         untested={proxies.untested}
       />
-    </div>
-  {:else if UI_TYPE == "console"}
-    <div id="main_container">
+    {:else if UI_TYPE == "console"}
       <CONSOLE_UI {logs} />
-    </div>
-  {:else if UI_TYPE == "file_editor"}
-    <div id="main_container">
+    {:else if UI_TYPE == "file_editor"}
       <FILE_EDITOR_UI {raw_options} />
-    </div>
-  {:else if UI_TYPE == "videos"}
-    <div id="main_container">
+    {:else if UI_TYPE == "videos"}
       <VIDEOS_UI {raw_options} />
-    </div>
-  {/if}
+    {/if}
+  </div>
 
   <div id="buttons_container">
     <button
-      on:click={changeContainer_workers}
-      class="class_button{(UI_TYPE == 'workers' && ' selected_class_button') ||
-        ''}"
-      id="workers_button">WORKERS</button
-    >
-    <button
-      on:click={changeContainer_proxies}
-      class="class_button{(UI_TYPE == 'proxies' && ' selected_class_button') ||
-        ''}"
-      id="proxies_button">PROXIES</button
-    >
-    <button
-      on:click={changeContainer_console}
-      class="class_button{(UI_TYPE == 'console' && ' selected_class_button') ||
-        ''}"
-      id="console_button">CONSOLE</button
-    >
-    <button
-      on:click={changeContainer_file_editor}
-      class="class_button{(UI_TYPE == 'file_editor' &&
-        ' selected_class_button') ||
-        ''}"
-      id="file_button">PROGRAM SETTINGS</button
-    >
+      on:click={() => UI_TYPE = "workers"}
+      class="class_button{UI_TYPE == 'workers' ? ' selected_class_button' : ''}"
+      id="workers_button">WORKERS</button>
 
     <button
-      on:click={changeContainer_videos}
-      class="class_button{(UI_TYPE == 'videos' && ' selected_class_button') ||
-        ''}"
-      id="videos_button">VIDEOS</button
-    >
+      on:click={() => UI_TYPE = "proxies"}
+      class="class_button{UI_TYPE == 'proxies' ? ' selected_class_button' : ''}"
+      id="proxies_button">PROXIES</button>
 
-    <h2
-      class="version_{(latestVersion == currentVersion && 'latest') || 'old'}"
-    >
+    <button
+      on:click={() => UI_TYPE = "console"}
+      class="class_button {UI_TYPE == 'console' ? 'selected_class_button' : ''}"
+      id="console_button">CONSOLE</button>
+
+    <button
+      on:click={() => UI_TYPE = "file_editor"}
+      class="class_button {UI_TYPE == 'file_editor' ? 'selected_class_button' : ''}"
+      id="file_button">PROGRAM SETTINGS</button>
+
+    <button
+      on:click={() => UI_TYPE = "videos"}
+      class="class_button {UI_TYPE == 'videos' ? 'selected_class_button' : ''}"
+    id="videos_button">VIDEOS</button>
+
+    <h2 class="version_{latestVersion == currentVersion ? 'latest' : 'old'}">
       VERSION {currentVersion}/{latestVersion}
     </h2>
+
+    <button
+      on:click={changeNXT_DATA}
+      class="class_button {NXT_DATA == 'videos' ? 'selected_class_button' :''}"
+    id="videos_button">VIDEOS</button>
   </div>
 </main>
