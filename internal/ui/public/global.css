@@ -252,6 +252,16 @@ button {
   margin-top: 0.5%;
 }
 
+.delete_button {
+  background-color: #db3838;
+  padding: 1%;
+}
+
+.delete_button_acc {
+  background-color: #db8138;
+  padding: 1%;
+}
+
 .log_date {
   color: #f5f5f5;
   font-size: 1.3em;

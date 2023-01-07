@@ -5,14 +5,23 @@
   import Slider from "@bulatdashiev/svelte-slider";
 
   export let videos = [];
-  let first = false
+  let first = false;
 
   function sendInputChange() {
     if (first) {
       axios.post(`/internal/set_videos`, videos);
     }
 
-    first = true
+    first = true;
+  }
+
+  function deleteVideo(video) {
+    videos = videos.filter((_, index) => index !== video);
+  }
+
+  function deleteAccount(video, account){
+    video.accounts = video.accounts.filter((_, index) => index !== account)
+    videos = videos
   }
 
   $: sendInputChange(videos);
@@ -42,7 +51,10 @@
   <div class="simple_selectors_1">
     {#each videos as video, index}
       <div class="element_container">
-        <p class="element_num">#{index + 1}</p>
+        <button
+          on:click={() => deleteVideo(index)}
+          class="element_num delete_button">#{index + 1}</button
+        >
 
         <h3 class="video_selector_text">
           Video URL/ID:
@@ -108,6 +120,11 @@
 
           {#each video.accounts as account, index}
             <div class="element_container_small">
+              <button
+                on:click={() => deleteAccount(video, index)}
+                class="element_num delete_button_acc">#{index + 1}</button
+              >
+
               <h3 class="video_selector_text">
                 Email (Or cookies):
                 <input

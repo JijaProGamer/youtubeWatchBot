@@ -96,6 +96,12 @@ module.exports = () => {
               global.proxy_stats.good.push(data2);
               global.good_proxies.push(proxy);
               io.sockets.write(data2);
+
+              fs.writeFileSync(
+                path.join(__dirname, "../../UDATA/ALV_PRX"),
+                JSON.stringify(newProxies),
+                "utf-8"
+              );
             } else {
               global.log(
                 `Proxy ${proxy} failed because of ${err.error}`,
@@ -119,12 +125,6 @@ module.exports = () => {
       }
 
       global.options.proxies = newProxies;
-      global.good_proxies = newProxies;
-      fs.writeFileSync(
-        path.join(__dirname, "../../UDATA/ALV_PRX"),
-        JSON.stringify(newProxies),
-        "utf-8"
-      );
     } else {
       let data = {
         type: "add_testing_proxy",

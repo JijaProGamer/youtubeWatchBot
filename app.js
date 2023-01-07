@@ -388,7 +388,6 @@ async function start(started) {
 
     options = global.raw_options;
     global.options = options;
-    console.log(global.options);
 
     await correctOptions();
 

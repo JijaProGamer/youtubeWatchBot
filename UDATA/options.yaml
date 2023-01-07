@@ -1,44 +1,13 @@
 close_server_on_finish: true
 server_port: 6553
 headless: false
-no_visuals: false
+no_visuals: true
 browserPath: C:\Program Files\Google\Chrome\Application\chrome.exe
-concurrency: 1
+concurrency: 3
 concurrencyInterval: 20
 proxyTimeout: 30
 disable_proxy_tests: false
 proxy_tested_headless: true
-shuffle_viewing_order: true
 proxies:
   - direct://
-  - socks5://localhost:404
-videos:
-  - id: rMbRMGoAvJQ
-    guest_views: 100
-    is_live: false
-    watchTime:
-      - 100
-      - 100
-    style:
-      - search
-      - direct
-      - subscriptions
-    accounts:
-      - email: your@email.com
-        password: your password
-        cookies: optional
-        comment: ""
-        dislike: false
-        like: false
-        likeAfter:
-          - 0
-          - 0
-        watchTime:
-          - 0
-          - 0
-        dislikeAfter:
-          - 0
-          - 0
-        commentAfter:
-          - 0
-          - 0
+videos: []
