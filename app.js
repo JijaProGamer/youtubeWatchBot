@@ -13,7 +13,6 @@ const fs = require("fs-extra");
 
 const { spawn } = require("child_process");
 const { parse, stringify } = require("yaml");
-const { sleep } = require("youtube-selfbot-api")().internal;
 
 const killProcesses = (name) => {
   return new Promise((resolve, reject) => {
@@ -407,6 +406,11 @@ async function start(started) {
     io.sockets.write({
       type: "change_queue",
       data: jobs,
+    });
+
+    io.sockets.write({
+      type: "change_start",
+      data: Date.now(),
     });
 
     shouldWork = true;

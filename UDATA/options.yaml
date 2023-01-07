@@ -3,11 +3,21 @@ server_port: 6553
 headless: false
 no_visuals: true
 browserPath: C:\Program Files\Google\Chrome\Application\chrome.exe
-concurrency: 3
-concurrencyInterval: 20
+concurrency: 20
+concurrencyInterval: 25
 proxyTimeout: 30
 disable_proxy_tests: false
 proxy_tested_headless: true
 proxies:
   - direct://
-videos: []
+videos:
+  - id: https://www.youtube.com/watch?v=VmqjnP98wfM&t=4s
+    guest_views: 50
+    is_live: false
+    watchTime:
+      - 100
+      - 100
+    style:
+      - search
+      - direct
+    accounts: []

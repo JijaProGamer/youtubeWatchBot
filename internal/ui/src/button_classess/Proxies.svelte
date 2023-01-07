@@ -4,18 +4,6 @@
   export let untested = [];
 
   export let container_type = "all";
-
-  function changeContainerr_all() {
-    container_type = "all";
-  }
-
-  function changeContainer_good() {
-    container_type = "good";
-  }
-
-  function changeContainer_bad() {
-    container_type = "bad";
-  }
 </script>
 
 <div id="proxy_container">
@@ -23,23 +11,20 @@
 </div>
 <div id="types_container">
   <button
-    on:click={changeContainerr_all}
+    on:click={() => container_type = 'all'}
     id="button_all"
-    class="type_button{(container_type == 'all' && ' selected_class_button') ||
-      ''}">ALL</button
-  >
+    class="type_button{container_type == 'all' ? ' selected_class_button' : ''}">ALL</button>
+
   <button
-    on:click={changeContainer_good}
+    on:click={() => container_type = 'good'}
     id="button_good"
-    class="type_button{(container_type == 'good' && ' selected_class_button') ||
-      ''}">GOOD</button
-  >
+    class="type_button {container_type == 'good' ? 'selected_class_button' : ''}">GOOD</button>
+
   <button
-    on:click={changeContainer_bad}
+    on:click={() => container_type = 'bad'}
     id="button_bad"
-    class="type_button{(container_type == 'bad' && ' selected_class_button') ||
-      ''}">BAD</button
-  >
+    class="type_button {container_type == 'bad' ? 'selected_class_button' : ''}">BAD</button>
+
 </div>
 
 <div id="elements_container">

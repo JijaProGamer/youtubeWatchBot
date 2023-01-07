@@ -2,6 +2,7 @@
   export let current_workers;
   export let finished_workers;
   export let queue_workers;
+  export let start_time = Date.now();
   export let container_type = "current";
 
   function changeContainer_current() {
@@ -13,11 +14,61 @@
   function changeContainer_queue() {
     container_type = "queue";
   }
+
+  function calculateMbps_finished() {
+    return finished_workers.reduce((a, b) => a + b.bandwith, 0) / 1e6 || 0;
+  }
+
+  function calculateMbps_current() {
+    return current_workers.reduce((a, b) => a + b.bandwith, 0) / 1e6 || 0;
+  }
 </script>
 
 <div id="workers_container">
   <h1 id="type_label">WORKERS</h1>
+  {#if container_type == "finished"}
+    <div class="element_container">
+      <p class="element_id">
+        Total bandwith: {calculateMbps_finished()} megabits
+      </p>
+      <p class="element_id">
+        Total bandwith: {calculateMbps_finished() /
+          ((Date.now() / 1000 - start_time / 1000) / 60)} megabits/minute
+      </p>
+      <p class="element_id">
+        average bandwith per worker: {calculateMbps_finished() /
+          (finished_workers.length || 0) || 0} megabits
+      </p>
+      <p class="element_id">
+        average bandwith per worker: {(calculateMbps_finished() /
+          (finished_workers.length || 0) || 0) /
+          ((Date.now() / 1000 - start_time / 1000) / 60)} megabits/minute
+      </p>
+    </div>
+  {/if}
+
+  {#if container_type == "current"}
+    <div class="element_container">
+      <p class="element_id">
+        Total bandwith: {calculateMbps_current()} megabits
+      </p>
+      <p class="element_id">
+        Total bandwith: {calculateMbps_current() /
+          ((Date.now() / 1000 - start_time / 1000) / 60)} megabits/minute
+      </p>
+      <p class="element_id">
+        average bandwith per worker: {calculateMbps_current() /
+          (current_workers.length || 0) || 0} megabits
+      </p>
+      <p class="element_id">
+        average bandwith per worker: {(calculateMbps_current() /
+          (current_workers.length || 0) || 0) /
+          ((Date.now() / 1000 - start_time / 1000) / 60)} megabits/minute
+      </p>
+    </div>
+  {/if}
 </div>
+
 <div id="types_container">
   <button
     on:click={changeContainer_current}
@@ -71,7 +122,10 @@
     {/each}
   {:else if container_type == "finished"}
     {#each finished_workers as worker, index}
-      <div class="element_container proxy_{worker.errors.length > 0 && "bad" || "good"}">
+      <div
+        class="element_container proxy_{(worker.errors.length > 0 && 'bad') ||
+          'good'}"
+      >
         <p class="element_id">#{index + 1}</p>
         <br />
         <div class="element_sort1">
@@ -108,9 +162,7 @@
           </p>
         </div>
 
-        <div class="element_sort2">
-
-        </div>
+        <div class="element_sort2" />
       </div>
     {/each}
   {/if}

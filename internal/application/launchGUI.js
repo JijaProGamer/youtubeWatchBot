@@ -22,7 +22,7 @@ const loadMainWindow = () => {
 module.exports = new Promise((resolve, reject) => {
     app.whenReady().then(async () => {
         resolve()
-        global.server.listen(global.options.server_port)
         loadMainWindow()
+        global.server.listen(global.options.server_port)
     })
 })

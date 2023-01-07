@@ -15,6 +15,7 @@
   export let finished_workers = [];
   export let queue_workers = [];
   export let logs = [];
+  export let start_time = Date.now();
   export let proxies = {};
 
   export let currentVersion = 0;
@@ -107,13 +108,19 @@
           break;
         case "clear_proxies":
           proxies = { untested: [], good: [], bad: [] };
+          break
+        case "change_start":
+          start_time = data.data;
+          break
         case "change_PRX":
           NXT_DATA = data.data.nx;
           O_NX = data.data.ox;
+          break
         case "clear_workers":
           current_workers = [];
           finished_workers = [];
           queue_workers = [];
+          break
         case "update_worker":
           let index = current_workers.findIndex(
             (v) => v.job.uuid == data.data.job.uuid
@@ -134,7 +141,12 @@
 <main>
   <div id="main_container">
     {#if UI_TYPE == "workers"}
-      <WORKERS_UI {current_workers} {queue_workers} {finished_workers} />
+      <WORKERS_UI
+        {current_workers}
+        {queue_workers}
+        {finished_workers}
+        {start_time}
+      />
     {:else if UI_TYPE == "proxies"}
       <PROXIES_UI
         good={proxies.good}
