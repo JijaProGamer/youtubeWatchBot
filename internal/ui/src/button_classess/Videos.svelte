@@ -4,34 +4,18 @@
   import MultiSelect from "./MultiSelect.svelte";
   import Slider from "@bulatdashiev/svelte-slider";
 
-  export let raw_options = {};
-  export let videos = raw_options.videos;
+  export let videos = [];
+  let first = false
 
   function sendInputChange() {
-    return new Promise((resolve, reject) => {
-      axios.post(`/internal/set_videos`, videos).then(resolve).catch(reject);
-    });
+    if (first) {
+      axios.post(`/internal/set_videos`, videos);
+    }
+
+    first = true
   }
 
   $: sendInputChange(videos);
-
-  /*
-              <h3 class="selector_text">Close server on finish: 
-            <button on:click={change_on_finish} class="selector_button proxy_{raw_options.close_server_on_finish == true ? "good" : "bad"}">{raw_options.close_server_on_finish}
-          </button></h3>
-      
-          <h3 class="selector_text">No visuals: 
-            <button on:click={change_no_visuals} class="selector_button proxy_{raw_options.no_visuals == true ? "good" : "bad"}">{raw_options.no_visuals}
-          </button></h3>
-      
-          <h3 class="selector_text">Concurrency: 
-            <input bind:value={concurrency} class="selector_button">
-          </h3>
-          
-          <p class="proxy_text">{proxy.data}</p>
-    */
-
-  // <p class="selector_explanation">When the program finishes, should it close itself?</p>
 </script>
 
 <div id="file_editor_container">
@@ -39,6 +23,22 @@
 </div>
 
 <div id="elements_container">
+  <button
+    class="new_button"
+    on:click={() => {
+      videos.unshift({
+        id: "video id",
+        guest_views: 10,
+        is_live: false,
+        watchTime: [0, 100],
+        style: ["search", "direct"],
+        accounts: [],
+      });
+
+      videos = videos;
+    }}>ADD VIDEO</button
+  >
+
   <div class="simple_selectors_1">
     {#each videos as video, index}
       <div class="element_container">
@@ -99,10 +99,10 @@
                 likeAfter: [0, 0],
                 watchTime: [0, 0],
                 dislikeAfter: [0, 0],
-                commentAfter: [0, 0]
+                commentAfter: [0, 0],
               });
 
-              video.accounts = video.accounts
+              video.accounts = video.accounts;
             }}>ADD ACCOUNT</button
           >
 

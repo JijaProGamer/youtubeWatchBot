@@ -1,28 +1,28 @@
 const fs = require("fs");
+const path = require("path")
 const to = require("await-to-js").to;
 
 const idValid = require("./idValid.js");
 const checkProxy = require("./testProxy.js");
 const create_job = require("./create_job");
 
-let options = global.options;
 
 module.exports = () => {
   return new Promise(async (resolve) => {
-    if (!options.browserPath) {
+    if (!global.options.browserPath) {
     } else {
-      if (!fs.existsSync(options.browserPath)) {
+      if (!fs.existsSync(global.options.browserPath)) {
       }
     }
 
-    options.proxies = options.proxies.filter((v) => v.length > 5);
-    options.proxies = [...new Set(options.proxies)];
+    global.options.proxies = global.options.proxies.filter((v) => v.length > 5);
+    global.options.proxies = [...new Set(global.options.proxies)];
 
-    for (let [index, proxy] of options.proxies.entries()) {
+    for (let [index, proxy] of global.options.proxies.entries()) {
       if (proxy.length > 5) {
         let breaks = proxy.split(":");
         if (breaks.length == 4) {
-          options.proxies[
+          global.options.proxies[
             index
           ] = `${breaks[2]}:${breaks[3]}@${breaks[0]}:${breaks[1]}`;
         }
@@ -32,8 +32,8 @@ module.exports = () => {
     let newVideos = [];
     let newProxies = [];
 
-    if (options.proxies && options.proxies.length > 0) {
-      for (let [index, proxy] of options.proxies.entries()) {
+    if (global.options.proxies && global.options.proxies.length > 0) {
+      for (let [index, proxy] of global.options.proxies.entries()) {
         let data = {
           type: "add_testing_proxy",
           data: proxy,
@@ -43,8 +43,8 @@ module.exports = () => {
         io.sockets.write(data);
       }
 
-      for (let [index, proxy] of options.proxies.entries()) {
-        if (options.disable_proxy_tests) {
+      for (let [index, proxy] of global.options.proxies.entries()) {
+        if (global.options.disable_proxy_tests) {
           let data2 = {
             type: "add_good_proxy",
             latency: 0,
@@ -118,7 +118,7 @@ module.exports = () => {
         }
       }
 
-      options.proxies = newProxies;
+      global.options.proxies = newProxies;
       global.good_proxies = newProxies;
       fs.writeFileSync(
         path.join(__dirname, "../../UDATA/ALV_PRX"),
@@ -143,10 +143,10 @@ module.exports = () => {
       global.proxy_stats.good.push(data2);
       io.sockets.write(data2);
 
-      options.proxies = ["direct://"];
+      global.options.proxies = ["direct://"];
     }
 
-    for (let video of options.videos) {
+    for (let video of global.options.videos) {
       if (video.id.includes("/")) {
         let url = new URL(video.id);
         if (url.pathname.includes("shorts")) {

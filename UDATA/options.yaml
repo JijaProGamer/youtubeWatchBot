@@ -10,23 +10,15 @@ disable_proxy_tests: false
 proxy_tested_headless: true
 shuffle_viewing_order: true
 proxies:
-  - bloxxy213:Victor0nokia5@185.199.229.156:7492
-  - bloxxy213:Victor0nokia5@185.199.228.220:7300
-  - bloxxy213:Victor0nokia5@185.199.231.45:8382
-  - bloxxy213:Victor0nokia5@188.74.210.207:6286
-  - bloxxy213:Victor0nokia5@188.74.183.10:8279
-  - bloxxy213:Victor0nokia5@188.74.210.21:6100
-  - bloxxy213:Victor0nokia5@45.155.68.129:8133
-  - bloxxy213:Victor0nokia5@154.95.36.199:6893
-  - bloxxy213:Victor0nokia5@45.94.47.66:8110
-  - bloxxy213:Victor0nokia5@144.168.217.88:8780
+  - direct://
+  - socks5://localhost:404
 videos:
-  - id: VmqjnP98wfM
-    watchTime:
-      - 42
-      - 85
-    guest_views: 5
+  - id: rMbRMGoAvJQ
+    guest_views: 100
     is_live: false
+    watchTime:
+      - 100
+      - 100
     style:
       - search
       - direct
@@ -50,34 +42,3 @@ videos:
         commentAfter:
           - 0
           - 0
-      - email: test@email.com
-        password: CoolPassword_123
-        cookies: "[{name: 'secure_stuff', value: 'something'},{name: 'another_cookie',
-          value: 'yes'}]"
-        like: true
-        dislike: false
-        comment: This is a cool video
-        likeAfter:
-          - 42
-          - 85
-        dislikeAfter:
-          - 0
-          - 100
-        commentAfter:
-          - 0
-          - 100
-      - email: test_222@email.com
-        password: EvenBetterPassword_123
-        dislike: false
-        cookies: ""
-        like: false
-        comment: ""
-        likeAfter:
-          - 42
-          - 85
-        dislikeAfter:
-          - 42
-          - 85
-        commentAfter:
-          - 42
-          - 85

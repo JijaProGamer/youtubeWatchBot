@@ -80,11 +80,11 @@ global.jobs = jobs;
 let queue_workers = [];
 
 webApp.post("/internal/set_raw_options", (req, res) => {
-  global.raw_options = req.body;
-  global.raw_options = { ...global.raw_options, videos: global.raw_videos };
+  global.raw_options = { ...req.body, videos: global.raw_videos };
+
   fs.writeFileSync(
     "./UDATA/options.yaml",
-    stringify({ ...global.raw_options, videos: global.raw_videos }),
+    stringify(global.raw_options),
     "utf-8"
   );
 
@@ -93,10 +93,10 @@ webApp.post("/internal/set_raw_options", (req, res) => {
 
 webApp.post("/internal/set_videos", (req, res) => {
   global.raw_videos = req.body;
-  global.raw_options = { ...global.raw_options, videos: global.raw_videos };
+  global.raw_options = { ...global.raw_options, videos: req.body };
   fs.writeFileSync(
     "./UDATA/options.yaml",
-    stringify({ ...global.raw_options, videos: global.raw_videos }),
+    stringify(global.raw_options),
     "utf-8"
   );
 
@@ -303,62 +303,62 @@ let interval = setInterval(() => {
       if (currentWorking < options.concurrency) {
         let currentJob = totalWorked;
         let job = jobs[totalWorked];
-        let worker = {
-          job,
-          index: totalWorked,
-          totalWorked: totalWorked + 1,
-          current_time: 0,
-          loaded: false,
-          bandwith: 0,
-          //loading_bandwith: 0,
-          failed: false,
-          finished: false,
-          stopped: false,
-          proxy_used: true,
-          debug: [],
-          errors: [],
-        };
+        if (job) {
+          let worker = {
+            job,
+            index: totalWorked,
+            totalWorked: totalWorked + 1,
+            current_time: 0,
+            loaded: false,
+            bandwith: 0,
+            //loading_bandwith: 0,
+            failed: false,
+            finished: false,
+            stopped: false,
+            proxy_used: true,
+            debug: [],
+            errors: [],
+          };
 
-        queue_workers = queue_workers.filter((v) => v.uuid !== worker.job.uuid);
+          queue_workers = queue_workers.filter(
+            (v) => v.uuid !== worker.job.uuid
+          );
 
-        io.sockets.write({
-          type: "add_worker",
-          data: worker,
-        });
-
-        current_workers.push(worker);
-
-        if (!job) {
-          return clearInterval(interval);
-        }
-
-        log(`worker #${currentJob + 1} started`, "info");
-
-        handleWorker(worker)
-          .then(() => {
-            workers_finished.push(worker);
-            current_workers = current_workers.filter(
-              (v) => v.index !== worker.index
-            );
-
-            currentWorking -= 1;
-
-            log(`worker #${currentJob} finished`, "info");
-          })
-          .catch((err) => {
-            workers_finished.push(worker);
-            current_workers = current_workers.filter(
-              (v) => v.index !== worker.index
-            );
-
-            currentWorking -= 1;
-
-            log(`worker #${currentJob} finished with an error`, "error");
+          io.sockets.write({
+            type: "add_worker",
+            data: worker,
           });
 
-        currentWorking += 1;
-        totalWorked += 1;
-        lastLaunched = Date.now() / 1000;
+          current_workers.push(worker);
+
+          log(`worker #${currentJob + 1} started`, "info");
+
+          handleWorker(worker)
+            .then(() => {
+              workers_finished.push(worker);
+              current_workers = current_workers.filter(
+                (v) => v.index !== worker.index
+              );
+
+              currentWorking -= 1;
+
+              log(`worker #${currentJob} finished`, "info");
+            })
+            .catch((err) => {
+              workers_finished.push(worker);
+              current_workers = current_workers.filter(
+                (v) => v.index !== worker.index
+              );
+
+              currentWorking -= 1;
+
+              log(`worker #${currentJob} finished with an error`, "error");
+            });
+
+          currentWorking += 1;
+          totalWorked += 1;
+          lastLaunched = Date.now() / 1000;
+        }
       }
     }
   }
@@ -366,6 +366,11 @@ let interval = setInterval(() => {
 
 async function start(started) {
   if (started) {
+    io.sockets.write({
+      type: "change_PRX",
+      data: { nx: "WAIT", ox: "WAIT" },
+    });
+
     currentWorking = 0;
     totalWorked = 0;
 
@@ -380,18 +385,25 @@ async function start(started) {
     };
 
     lastLaunched = Date.now() / 1000 - options.concurrencyInterval;
+
     options = global.raw_options;
+    global.options = options;
+    console.log(global.options);
 
     await correctOptions();
+
+    jobs = jobs
+      .map((value) => ({ value, sort: Math.random() }))
+      .sort((a, b) => a.sort - b.sort)
+      .map(({ value }) => value);
+
     jobs = global.jobs;
     queue_workers = jobs;
 
-    if (options.shuffle_viewing_order) {
-      jobs = jobs
-        .map((value) => ({ value, sort: Math.random() }))
-        .sort((a, b) => a.sort - b.sort)
-        .map(({ value }) => value);
-    }
+    io.sockets.write({
+      type: "change_PRX",
+      data: { nx: "START", ox: "STOP" },
+    });
 
     io.sockets.write({
       type: "change_queue",
@@ -402,10 +414,19 @@ async function start(started) {
   } else {
     shouldWork = false;
 
+    io.sockets.write({ type: "clear_proxies" });
+
     for (let worker of current_workers) {
       worker.stopped = true;
-      worker.process.kill("SIGINT");
+      worker.process?.kill("SIGINT");
     }
+
+    io.sockets.write({ type: "clear_workers" });
+
+    io.sockets.write({
+      type: "change_PRX",
+      data: { nx: "STOP", ox: "START" },
+    });
   }
 }
 

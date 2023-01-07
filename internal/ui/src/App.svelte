@@ -20,12 +20,13 @@
   export let currentVersion = 0;
   export let latestVersion = 0;
 
+  export let O_NX = "START";
   export let NXT_DATA = "STOP";
   export let options = {};
   export let raw_options = {};
   let socket;
 
-  export let UI_TYPE = "proxies";
+  export let UI_TYPE = "videos";
   import WORKERS_UI from "./button_classess/Workers.svelte";
   import PROXIES_UI from "./button_classess/Proxies.svelte";
   import CONSOLE_UI from "./button_classess/Console.svelte";
@@ -33,14 +34,19 @@
   import VIDEOS_UI from "./button_classess/Videos.svelte";
 
   function changeNXT_DATA() {
-    NXT_DATA = NXT_DATA == "STOP" ? "START" : "STOP"
-    axios.post(`/internal/set_NXT_DATA`, {data: NXT_DATA})
+    if (NXT_DATA !== "WAIT") {
+      NXT_DATA = NXT_DATA == "STOP" ? "START" : "STOP";
+      O_NX = NXT_DATA == "STOP" ? "START" : "STOP";
+
+      axios.post(`/internal/set_NXT_DATA`, { data: NXT_DATA });
+    }
   }
 
   (async () => {
     options = await doRequest("get_options");
     raw_options = await doRequest("get_raw_options");
     NXT_DATA = await doRequest("NXT_DATA");
+    O_NX = NXT_DATA == "STOP" ? "START" : "STOP";
 
     queue_workers = await doRequest("get_queue_workers");
     current_workers = await doRequest("get_current_workers");
@@ -99,6 +105,15 @@
           proxies.bad.push(data);
           proxies = proxies;
           break;
+        case "clear_proxies":
+          proxies = { untested: [], good: [], bad: [] };
+        case "change_PRX":
+          NXT_DATA = data.data.nx;
+          O_NX = data.data.ox;
+        case "clear_workers":
+          current_workers = [];
+          finished_workers = [];
+          queue_workers = [];
         case "update_worker":
           let index = current_workers.findIndex(
             (v) => v.job.uuid == data.data.job.uuid
@@ -131,43 +146,53 @@
     {:else if UI_TYPE == "file_editor"}
       <FILE_EDITOR_UI {raw_options} />
     {:else if UI_TYPE == "videos"}
-      <VIDEOS_UI {raw_options} />
+      <VIDEOS_UI videos={raw_options.videos} />
     {/if}
   </div>
 
   <div id="buttons_container">
     <button
-      on:click={() => UI_TYPE = "workers"}
+      on:click={() => (UI_TYPE = "workers")}
       class="class_button{UI_TYPE == 'workers' ? ' selected_class_button' : ''}"
-      id="workers_button">WORKERS</button>
+      id="workers_button">WORKERS</button
+    >
 
     <button
-      on:click={() => UI_TYPE = "proxies"}
+      on:click={() => (UI_TYPE = "proxies")}
       class="class_button{UI_TYPE == 'proxies' ? ' selected_class_button' : ''}"
-      id="proxies_button">PROXIES</button>
+      id="proxies_button">PROXIES</button
+    >
 
     <button
-      on:click={() => UI_TYPE = "console"}
+      on:click={() => (UI_TYPE = "console")}
       class="class_button {UI_TYPE == 'console' ? 'selected_class_button' : ''}"
-      id="console_button">CONSOLE</button>
+      id="console_button">CONSOLE</button
+    >
 
     <button
-      on:click={() => UI_TYPE = "file_editor"}
-      class="class_button {UI_TYPE == 'file_editor' ? 'selected_class_button' : ''}"
-      id="file_button">PROGRAM SETTINGS</button>
+      on:click={() => (UI_TYPE = "file_editor")}
+      class="class_button {UI_TYPE == 'file_editor'
+        ? 'selected_class_button'
+        : ''}"
+      id="file_button">PROGRAM SETTINGS</button
+    >
 
     <button
-      on:click={() => UI_TYPE = "videos"}
+      on:click={() => (UI_TYPE = "videos")}
       class="class_button {UI_TYPE == 'videos' ? 'selected_class_button' : ''}"
-    id="videos_button">VIDEOS</button>
+      id="videos_button">VIDEOS</button
+    >
 
-    <h2 class="version_{latestVersion == currentVersion ? 'latest' : 'old'}">
+    <h2
+      class="h2_vs version_{latestVersion == currentVersion ? 'latest' : 'old'}"
+    >
       VERSION {currentVersion}/{latestVersion}
     </h2>
 
     <button
       on:click={changeNXT_DATA}
-      class="class_button {NXT_DATA == 'videos' ? 'selected_class_button' :''}"
-    id="videos_button">VIDEOS</button>
+      class="nxt_button state_{NXT_DATA}"
+      id="nxt_button">{O_NX}</button
+    >
   </div>
 </main>

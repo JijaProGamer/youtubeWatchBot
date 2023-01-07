@@ -21,13 +21,36 @@ main {
 }
 
 .version_latest {
-  margin-top: 15%;
   color: #a5db8f;
 }
 
 .version_old {
-  margin-top: 15%;
   color: #db3838;
+}
+
+.nxt_button {
+  color: #000000;
+  font-size: 2em;
+  max-width: 80%;
+  margin-left: 15%;
+}
+
+.h2_vs {
+  margin-top: 10%;
+  margin-bottom: 10%;
+  text-align: center;
+}
+
+.state_STOP {
+  background-color: #a5db8f;
+}
+
+.state_START {
+  background-color: #db3838;
+}
+
+.state_WAIT {
+  background-color: #db3838;
 }
 
 #buttons_container {
